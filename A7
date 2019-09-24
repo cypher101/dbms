@@ -1,0 +1,131 @@
+                                       Experiment No. : A7
+
+Title : PL/SQL Stored Procedure and Stored Function.
+
+Write a Stored Procedure namely proc_Grade for the categorization of student. If marks scored by students in examination is <=1500 and marks>=990 then student will be placed in distinction category if marks scored are between 989 and900 category is first class, if marks 899 and 825 category is Higher Second Class
+Write a PL/SQL block for using procedure created with above requirement.
+Stud_Marks(name, total_marks)
+Result(Roll,Name, Class)
+Frame the separate problem statement for writing PL/SQL Stored Procedure and
+function, inline
+
+MariaDB [(none)]> create database College;
+Query OK, 1 row affected (0.011 sec)
+
+MariaDB [(none)]> use College;
+Database changed
+MariaDB [College]> create table Stud_marks(Roll_no int(3),name varchar(10),marks int(5),Result varchar(10));
+Query OK, 0 rows affected (0.256 sec)
+
+MariaDB [College]> desc Stud_marks;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| Roll_no | int(3)      | YES  |     | NULL    |       |
+| name    | varchar(10) | YES  |     | NULL    |       |
+| marks   | int(5)      | YES  |     | NULL    |       |
+| Result  | varchar(10) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+4 rows in set (0.012 sec)
+
+MariaDB [College]> insert into Stud_marks values(101,'Mayur','1125','NULL');
+Query OK, 1 row affected (0.060 sec)
+
+MariaDB [College]> insert into Stud_marks values(102,'Akash','965','NULL');
+Query OK, 1 row affected (0.033 sec)
+
+MariaDB [College]> insert into Stud_marks values(103,'Omkar','875','NULL');
+Query OK, 1 row affected (0.038 sec)
+
+MariaDB [College]> insert into Stud_marks values(104,'Amit','752','NULL');
+Query OK, 1 row affected (0.036 sec)
+
+MariaDB [College]> insert into Stud_marks values(105,'Nitesh','625','NULL');
+Query OK, 1 row affected (0.043 sec)
+
+MariaDB [College]> insert into Stud_marks values(106,'Hrishi','576','NULL');
+Query OK, 1 row affected (0.037 sec)
+
+MariaDB [College]> select * from Stud_marks;
++---------+---------+-------+--------+
+| Roll_no | name    | marks | Result |
++---------+---------+-------+--------+
+|     101 | Mayur |  1125 | NULL   |
+|     102 | Akash   |   965 | NULL   |
+|     103 | Omkar   |   875 | NULL   |
+|     104 | Amit  |   752 | NULL   |
+|     105 | Nitesh  |   625 | NULL   |
+|     106 | Hrishi   |   576 | NULL   |
++---------+---------+-------+--------+
+6 rows in set (0.000 sec)
+
+MariaDB [College]> delimiter //
+MariaDB [College]> create procedure proc_Grade(1IN rno int(3),IN name1 varchar(10))
+    -> begin
+    -> Declare marks1 int(5);
+    -> select marks into marks1 from Stud_marks where Roll_no=rno and name=name1;
+    -> if(marks1<=1500 and marks1>=990)then
+    -> update Stud_marks set Result='Dist' where Roll_no=rno;
+    -> elseif( marks1<=989 and marks1>=900)then
+    -> update Stud_marks set Result='1st class' where Roll_no=rno;
+    -> elseif(marks1<=899 and marks1>=825)then
+    -> update Stud_marks set Result='2nd class' where Roll_no=rno;
+    -> elseif(marks1<=824 and marks1>=600)then
+    -> update Stud_marks set Result='pass' where Roll_no=rno;
+    -> elseif(marks1<600)then
+    -> update Stud_marks set Result='Fail' where Roll_no=rno;
+    -> end if;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.079 sec)
+
+MariaDB [College]> call proc_Grade1(101,'Mayur');
+    -> //
+Query OK, 2 rows affected (0.061 sec)
+
+MariaDB [College]> select * from Stud_marks;
+    -> //
++---------+---------+-------+--------+
+| Roll_no | name    | marks | Result |
++---------+---------+-------+--------+
+|     101 | Mayur |  1125 | Dist   |
+|     102 | Akash   |   965 | NULL   |
+|     103 | Omkar   |   875 | NULL   |
+|     104 | Amit  |   752 | NULL   |
+|     105 | Nitesh  |   625 | NULL   |
+|     106 | Hrishi   |   576 | NULL   |
++---------+---------+-------+--------+
+6 rows in set (0.000 sec)
+
+MariaDB [College]> call proc_Grade1(102,'Akash');
+    -> //
+Query OK, 2 rows affected (0.042 sec)
+
+MariaDB [College]> call proc_Grade1(103,'Omkar');
+    -> //
+Query OK, 2 rows affected (0.046 sec)
+
+MariaDB [College]> call proc_Grade1(104,'Amit');
+    -> //
+Query OK, 2 rows affected (0.050 sec)
+
+MariaDB [College]> call proc_Grade1(105,'Nitesh');
+    -> //
+Query OK, 2 rows affected (0.042 sec)
+MariaDB [College]> call proc_Grade1(106,'Hrishi');
+    -> //
+Query OK, 2 rows affected (0.043 sec)
+
+MariaDB [College]> select * from Stud_marks;
+    -> //
++---------+---------+-------+-----------+
+| Roll_no | name    | marks | Result    |
++---------+---------+-------+-----------+
+|     101 | Mayur |  1125 | Dist      |
+|     102 | Akash   |   965 | 1st class |
+|     103 | Omkar   |   875 | 2nd class |
+|     104 | Amit  |   752 | pass      |
+|     105 | Nitesh  |   625 | pass      |
+|     106 | Hrishi   |   576 | Fail      |
++---------+---------+-------+-----------+
+6 rows in set (0.000 sec)

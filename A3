@@ -1,0 +1,278 @@
+                                                            Experiment No. : A3
+
+Title : Design atleast 10 SQL Queries for suitable database application using SQL DML statements insert, select, update, delete with operation, functions and set operator
+
+   1. CALL
+
+   2. DELETE
+
+   3. INSERT
+
+   4. INSERT SELECT
+
+   5. JOIN
+
+   6. LOAD DATA
+
+   7. REPLACE
+
+   8. SELECT
+
+   9. UNION
+
+10. UPDATE
+
+CREATE
+
+MariaDB [(none)]> create database ;
+Query OK, 1 row affected (0.03 sec)
+
+MariaDB [(none)]> use stuinfo
+Database changed
+MariaDB [stuinfo]> create table info(rollno int, name varchar(20));
+Query OK, 0 rows affected (1.66 sec)
+
+MariaDB [stuinfo]> show tables;
++-------------------+
+| Tables_in_stuinfo |
++-------------------+
+| info              |
++-------------------+
+1 row in set (0.00 sec)
+
+ INSERT                                                   
+
+MariaDB [stuinfo]> insert into info(rollno, name) values(1,'Mayur');
+Query OK, 1 row affected (0.09 sec)
+
+MariaDB [stuinfo]> insert into info(rollno, name) values(2,'Ashutosh');
+Query OK, 1 row affected (0.06 sec)
+
+MariaDB [stuinfo]> insert into info(rollno, name) values(3,'Hrishi');
+Query OK, 1 row affected (0.04 sec)
+
+
+
+SELECT
+
+MariaDB [stuinfo]> select * from info;
++--------+----------+
+| rollno | name     |
++--------+----------+
+|      1 | Mayur    |
+|      2 | Ashutosh |
+|      3 | Hrishi   |
++--------+----------+
+3 rows in set (0.01 sec)
+
+MariaDB [stuinfo]> select * from info where name = 'Mayur';
++--------+-------+
+| rollno | name  |
++--------+-------+
+|      1 | Mayur |
++--------+-------+
+1 row in set (0.00 sec)
+
+DELETE                                                      
+
+MariaDB [stuinfo]> delete from info where rollno = 3;
+Query OK, 1 row affected (0.05 sec)
+
+MariaDB [stuinfo]> select * from info;
++--------+----------+
+| rollno | name     |
++--------+----------+
+|      1 | Mayur    |
+|      2 | Ashutosh |
++--------+----------+
+2 rows in set (0.00 sec)
+
+UPDATE                                                      
+
+MariaDB [stuinfo]> update info set name = 'Omkar' where rollno = 2;
+Query OK, 1 row affected (0.04 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [stuinfo]> select * from info;
++--------+-------+
+| rollno | name  |
++--------+-------+
+|      1 | Mayur |
+|      2 | Omkar |
++--------+-------+
+2 rows in set (0.00 sec)
+
+MariaDB [stuinfo]> update info set rollno = 3 where name = 'Mayur';
+Query OK, 1 row affected (0.05 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [stuinfo]> select * from info;
++--------+-------+
+| rollno | name  |
++--------+-------+
+|      3 | Mayur |
+|      2 | Omkar |
++--------+-------+
+2 rows in set (0.00 sec)
+
+ REPLACE                                            
+
+MariaDB [stuinfo]> alter table info add constraint primary key(rollno);
+Query OK, 2 rows affected (1.08 sec)               
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [stuinfo]> desc info;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| rollno | int(11)     | NO   | PRI | NULL    |       |
+| name   | varchar(20) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+2 rows in set (0.08 sec)
+
+MariaDB [stuinfo]> replace into info(rollno,name) values(2,'Karan');
+Query OK, 2 rows affected (0.06 sec)
+
+MariaDB [stuinfo]> select * from info;
++--------+-------+
+| rollno | name  |
++--------+-------+
+|      2 | Karan |
+|      3 | Mayur |
++--------+-------+
+2 rows in set (0.00 sec)
+
+MariaDB [stuinfo]> select replace('Hi','H','B');
++-----------------------+
+| replace('Hi','H','B') |
++-----------------------+
+| Bi                    |
++-----------------------+
+1 row in set (0.01 sec)
+
+LOAD                                                         
+
+new.txt : (file is created to load in database)
+ 
+4	Anil
+
+5	Amol
+
+6	Suraj
+
+MariaDB [stuinfo]> load data local infile '/home/mayur/Desktop/new.txt' into table info;
+Query OK, 3 rows affected, 1 warning (0.01 sec)      
+Records: 3  Deleted: 0  Skipped: 0  Warnings: 1
+
+MariaDB [stuinfo]> select * from info;
++--------+-------+
+| rollno | name  |
++--------+-------+
+|      2 | Karan   |
+|      3 | Mayur  |
+|      4 | Anil    |
+|      5 | Amol  |
+|      6 | Suraj   |
++--------+-------+
+5 rows in set (0.00 sec)
+                                         
+INSERT SELECT
+
+MariaDB [stuinfo]> create table sinfo(rollno int, name varchar(20));
+Query OK, 0 rows affected (0.30 sec)
+
+MariaDB [stuinfo]> insert into sinfo(rollno, name) values(7,'Rushab');
+Query OK, 1 row affected (0.06 sec)
+
+MariaDB [stuinfo]> insert into sinfo(rollno, name) values(8,'Dev');
+Query OK, 1 row affected (0.04 sec)
+
+MariaDB [stuinfo]> select * from sinfo;
++--------+--------+
+| rollno | name   |
++--------+--------+
+|      7 | Rushab |
+|      8 | Dev    |
++--------+--------+
+2 rows in set (0.00 sec)
+
+MariaDB [stuinfo]> insert into sinfo(rollno,name) select rollno,name from info;
+Query OK, 2 rows affected (0.05 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [stuinfo]> select * from sinfo;
++--------+--------+
+| rollno | name   |
++--------+--------+
+|      7 | Rushab |
+|      8 | Dev    |
+|      2 | Karan  |
+|      3 | Mayur  |
+|      4 | Anil    |
+|      5 | Amol  |
+|      6 | Suraj   |
++--------+--------+
+4 rows in set (0.00 sec)
+
+MariaDB [stuinfo]> insert into sinfo(rollno,name) select *from info where name = 'Suraj';
+Query OK, 1 row affected (0.05 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+MariaDB [stuinfo]> select * from sinfo;
++--------+--------+
+| rollno | name   |
++--------+--------+
+|      7 | Rushab |
+|      8 | Dev    |
+|      2 | Karan  |
+|      3 | Mayur  |
+|      4 | Anil    |
+|      5 | Amol  |
+|      6 | Suraj   |
++--------+--------+
+5 rows in set (0.00 sec)
+
+UNION                                                  
+
+MariaDB [stuinfo]> select rollno,name from info union select rollno,name from sinfo;
++--------+--------+
+| rollno | name   |
++--------+--------+
+|      2 | Karan  |
+|      3 | Mayur  |
+|      4 | Anil   |
+|      5 | Amol   |
+|      6 | Suraj  |
+|      9 | Sanket |
+|      7 | Rushab |
+|      8 | Dev    |
++--------+--------+
+8 rows in set (0.00 sec)
+
+CALL                                                        
+
+MariaDB [stuinfo]> delimiter / 
+MariaDB [stuinfo]> create procedure infop() 
+    -> begin 
+    -> select *from info; 
+    -> end 
+    -> ; 
+    -> / 
+Query OK, 0 rows affected (0.00 sec) 
+
+MariaDB [stuinfo]> call infop();
+    -> /
++--------+-------+
+| rollno | name  |
++--------+-------+
+|      2 | Karan |
+|      3 | Mayur |
+|      4 | Anil  |
+|      5 | Amol  |
+|      6 | Suraj |
++--------+-------+
+5 rows in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec) 

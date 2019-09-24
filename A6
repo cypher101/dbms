@@ -1,0 +1,75 @@
+Experiment No. : A6
+
+Title : Cursors (All types: Implicit, Explicit, Cursor FOR Loop, Parameterized Cursor)
+Write a PL/SQL block of code using parameterized Cursor, that will merge the data available in the newly created table N_RollCall with the data available in the table O_RollCall. If the data in the first table already exist in the second table then that data should be skipped.
+Frame the separate problem statement for writing PL/SQL block to implement all types of Cursors inline with above statement.The problem statement should clearly state the requirements.
+
+// cursor syntax : DECLARE CURSOR_NAME CURSOR FOR SELECT COLUMN_LIST FROM TABLE_NAME;
+
+MariaDB [Cursor]> create table employee (Eid int,name varchar(20),salary int);
+Query OK, 0 rows affected (0.05 sec)
+
+MariaDB [Cursor]> insert into employee values (11,'aaa',35000);
+Query OK, 1 row affected (0.02 sec)
+
+MariaDB [Cursor]> insert into employee values (22,'bbb',45000);
+Query OK, 1 row affected (0.02 sec)
+
+MariaDB [Cursor]> insert into employee values (33,'ccc',15000);
+Query OK, 1 row affected (0.03 sec)
+
+MariaDB [Cursor]> insert into employee values (44,'ddd',60000);
+Query OK, 1 row affected (0.01 sec)
+
+MariaDB [Cursor]> select * from employee;
++------+------ +--------  +
+| Eid  | name | salary  |
++------+------ +--------  +
+|   11 | aaa    |  35000 |
+|   22 | bbb    |  45000 |
+|   33 | ccc     |  15000 |
+|   44 | ddd   |  60000 |
++------+------ +--------+
+4 rows in set (0.00 sec)
+
+
+MariaDB [Cursor]> delimiter $                        
+MariaDB [Cursor]> CREATE PROCEDURE cursor_proc()   
+    -> BEGIN
+    -> DECLARE id int(3);
+    -> DECLARE sal int(5);
+    -> DECLARE exit_loop BOOLEAN;
+    -> DECLARE c1 CURSOR FOR SELECT Eid,salary FROM employee;
+    -> DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop=TRUE;
+    -> OPEN c1;
+    -> L1:LOOP
+    -> FETCH c1 INTO id,sal;
+    -> if sal>40000 then
+    -> Update employee set salary=sal+5000 where Eid=id;
+    -> else
+    -> Update employee set salary=sal+1000 where Eid=id;
+    -> End if;
+    -> IF exit_loop THEN
+    -> CLOSE c1;
+    -> LEAVE L1;
+    -> End IF;
+    -> End LOOP L1;
+    -> END $
+
+Query OK, 0 rows affected (0.00 sec)
+
+MariaDB [Cursor]> call cursor_proc();
+Query OK, 0 rows affected (0.04 sec)
+
+MariaDB [Cursor]> select * from employee;
++------+------+--------+
+| Eid  | name | salary |
++------+------+--------+
+|   11 | aaa  |  36000 |
+|   22 | bbb  |  50000 |
+|   33 | ccc  |  16000 |
+|   44 | ddd  |  65000 |
++------+------+--------+
+4 rows in set (0.00 sec)
+
+

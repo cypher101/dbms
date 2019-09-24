@@ -1,0 +1,313 @@
+Experiment No. : A2
+Tiltle: Design and Develop SQL DDL statements which demonstrate the use of SQL objects such as Table, View, Index, Sequence, Synonym.
+Creating Database
+MariaDB [(none)]> create database TEA;
+Query OK, 1 row affected (0.025 sec)
+
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| tea                |
++--------------------+
+4 rows in set (0.080 sec)
+
+MariaDB [(none)]> use TEA;
+Database changed
+MariaDB [TEA]> show tables;
+Empty set (0.001 sec)
+Creating Table
+MariaDB [TEA]> create table T4(Rollno int, Name varchar(10));
+Query OK, 0 rows affected (0.486 sec)
+
+MariaDB [TEA]> show tables;
++---------------+
+| Tables_in_tea |
++---------------+
+| t4            |
++---------------+
+1 row in set (0.001 sec)
+
+MariaDB [TEA]> select * from T4;
+Empty set (0.105 sec)
+Inserting into Table
+MariaDB [TEA]> insert into T4(Rollno,Name) values(76,'Mayur');
+Query OK, 1 row affected (0.161 sec)
+
+MariaDB [TEA]> select * from T4;
++--------+-------+
+| Rollno | Name  |
++--------+-------+
+|     76 | Mayur |
++--------+-------+
+1 row in set (0.000 sec)
+
+MariaDB [TEA]> select name from T4;
++-------+
+| name  |
++-------+
+| Mayur |
++-------+
+1 row in set (0.000 sec)
+
+MariaDB [TEA]> desc T4;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| Rollno | int(11)     | YES  |     | NULL    |       |
+| Name   | varchar(10) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+2 rows in set (0.238 sec)
+Creating View
+MariaDB [TEA]> create view T4view as select Rollno from T4;
+Query OK, 0 rows affected (0.180 sec)
+
+MariaDB [TEA]> select * from T4;
++--------+-------+
+| Rollno | Name  |
++--------+-------+
+|     76 | Mayur |
++--------+-------+
+1 row in set (0.000 sec)
+
+MariaDB [TEA]> select * from T4view;
++--------+
+| Rollno |
++--------+
+|     76 |
++--------+
+1 row in set (0.351 sec)
+ Deleting  View
+MariaDB [TEA]> drop view T4view;
+Query OK, 0 rows affected (0.001 sec)
+
+MariaDB [TEA]> select * from T4view;
+ERROR 1146 (42S02): Table 'tea.t4view' doesn't exist
+Creating Index
+MariaDB [TEA]> create index T4index on T4(Rollno);
+Query OK, 0 rows affected (0.734 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [TEA]> show indexes from T4;
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| t4    |          1 | T4index  |            1 | Rollno      | A         |           1 |     NULL | NULL   | YES  | BTREE      |         |               |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+1 row in set (0.001 sec)
+
+MariaDB [TEA]> desc T4;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| Rollno | int(11)     | YES  | MUL | NULL    |       |
+| Name   | varchar(10) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+2 rows in set (0.342 sec)
+Creating Function
+MariaDB [TEA]> create function T4f(s1 char(20),s2 char(20))returns char(50) deterministic return concat(s1,'',s2);
+Query OK, 0 rows affected (0.228 sec)
+
+MariaDB [TEA]> select T4f('HELLO','WORLD');
++----------------------+
+| T4f('HELLO','WORLD') |
++----------------------+
+| HELLOWORLD           |
++----------------------+
+1 row in set (0.376 sec)
+
+MariaDB [TEA]> create function T4f1(s1 int, s2 int)returns int  deterministic return s1+s2;
+Query OK, 0 rows affected (0.179 sec)
+
+MariaDB [TEA]> select t4f1(10,20);
++-------------+
+| t4f1(10,20) |
++-------------+
+|          30 |
++-------------+
+1 row in set (0.079 sec)
+Deleting Function
+MariaDB [TEA]> drop function T4f1;
+Query OK, 0 rows affected (0.146 sec)
+
+MariaDB [TEA]> select *from T4;
++--------+-------+
+| Rollno | Name  |
++--------+-------+
+|     76 | Mayur |
++--------+-------+
+1 row in set (0.001 sec)
+Creating Procedure
+MariaDB [TEA]> delimiter /
+MariaDB [TEA]> create procedure T4P()
+    -> begin
+    -> select *from T4;
+    -> end;
+    -> /
+Query OK, 0 rows affected (0.424 sec)
+MariaDB [TEA]> call T4P();
+    -> /
++--------+-------+
+| Rollno | Name  |
++--------+-------+
+|     76 | Mayur |
++--------+-------+
+1 row in set (0.297 sec)
+Query OK, 0 rows affected (0.312 sec)
+
+MariaDB [TEA]> delimiter ;
+MariaDB [TEA]> call T4P();
++--------+-------+
+| Rollno | Name  |
++--------+-------+
+|     76 | Mayur |
++--------+-------+
+1 row in set (0.000 sec)
+Query OK, 0 rows affected (0.008 sec)
+Rename table and column
+MariaDB [TEA]> alter table T4 rename to T4A;
+Query OK, 0 rows affected (0.271 sec)
+
+MariaDB [TEA]> show tables;
++---------------+
+| Tables_in_tea |
++---------------+
+| t4a           |
++---------------+
+1 row in set (0.001 sec)
+
+MariaDB [TEA]> alter table T4A change Rollno Rl int;
+Query OK, 0 rows affected (0.167 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [TEA]> desc T4A;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| Rl    | int(11)     | YES  | MUL | NULL    |       |
+| Name  | varchar(10) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.113 sec)
+Drop Column
+MariaDB [TEA]> alter table T4A drop column Rl;
+Query OK, 0 rows affected (0.459 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [TEA]> desc T4A;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| Name  | varchar(10) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+1 row in set (0.095 sec)
+Add column in table
+MariaDB [TEA]> alter table T4A add column Rollno int;
+Query OK, 0 rows affected (0.154 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [TEA]> desc T4A;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| Name   | varchar(10) | YES  |     | NULL    |       |
+| Rollno | int(11)     | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+2 rows in set (0.111 sec)
+
+MariaDB [TEA]> select *from T4A;
++-------+--------+
+| Name  | Rollno |
++-------+--------+
+| Mayur |   NULL |
++-------+--------+
+1 row in set (0.001 sec)
+Truncate Table
+MariaDB [TEA]> truncate table T4A;
+Query OK, 0 rows affected (0.406 sec)
+
+MariaDB [TEA]> select *from T4A;
+Empty set (0.000 sec)
+Drop Table
+MariaDB [TEA]> drop table T4A;
+Query OK, 0 rows affected (0.160 sec)
+
+MariaDB [TEA]> show tables;
+Empty set (0.001 sec)
+Create Trigger
+MariaDB [TEA]> create database First;
+Query OK, 1 row affected (0.312 sec)
+
+MariaDB [TEA]> use First;
+Database changed
+MariaDB [First]> create table T1(Rollno int, Name char(20), per float);
+Query OK, 0 rows affected (0.440 sec)
+
+MariaDB [First]> insert into T1 values (1,'Mayur',77.7);
+Query OK, 1 row affected (0.346 sec)
+
+MariaDB [First]> insert into T1 values (2,'Hrishi',68.9);
+Query OK, 1 row affected (0.092 sec)
+
+MariaDB [First]> select *from T1;
++--------+--------+------+
+| Rollno | Name   | per  |
++--------+--------+------+
+|      1 | Mayur  | 77.7 |
+|      2 | Hrishi | 68.9 |
++--------+--------+------+
+2 rows in set (0.000 sec)
+
+MariaDB [First]> create table T2(Rollno int, Name char(20));
+Query OK, 0 rows affected (0.574 sec)
+
+MariaDB [First]> desc T2;
++--------+----------+------+-----+---------+-------+
+| Field  | Type     | Null | Key | Default | Extra |
++--------+----------+------+-----+---------+-------+
+| Rollno | int(11)  | YES  |     | NULL    |       |
+| Name   | char(20) | YES  |     | NULL    |       |
++--------+----------+------+-----+---------+-------+
+2 rows in set (0.293 sec)
+
+MariaDB [First]> select *from T2;
+Empty set (0.001 sec)
+
+MariaDB [First]> delimiter /
+MariaDB [First]> create trigger Trg1 before delete on T1 for each row begin insert into T2 values(old.Rollno,old.Name);
+    -> end /
+Query OK, 0 rows affected (0.732 sec)
+
+MariaDB [First]> select *from T1;
+    -> /
++--------+--------+------+
+| Rollno | Name   | per  |
++--------+--------+------+
+|      1 | Mayur  | 77.7 |
+|      2 | Hrishi | 68.9 |
++--------+--------+------+
+2 rows in set (0.145 sec)
+
+MariaDB [First]> select *from T2;/
+Empty set (0.000 sec)
+
+MariaDB [First]> delete from T1 where Rollno = 2; /
+Query OK, 1 row affected (0.122 sec)
+
+MariaDB [First]> select *from T1; /
++--------+-------+------+
+| Rollno | Name  | per  |
++--------+-------+------+
+|      1 | Mayur | 77.7 |
++--------+-------+------+
+1 row in set (0.001 sec)
+
+MariaDB [First]> select *from T2; /
++--------+--------+
+| Rollno | Name   |
++--------+--------+
+|      2 | Hrishi |
++--------+--------+
+1 row in set (0.000 sec)

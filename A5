@@ -1,0 +1,123 @@
+Experiment No. : A5
+
+Title:   Write a PL/SQL block of code for the following requirements  Schema:
+	1. Borrower(Rollin, Name, DateofIssue, NameofBook, Status)
+	2. Fine(Roll_no,Date,Amt)
+	Accept roll_no & name of book from user.  Check the number of days (from date of issue), if days are between 15 to 30 then fine  amount will be Rs 5per day. If no. of days>30, per day fine will be Rs 50 per day & for days less than 30, Rs. 5 per day. After submitting the book, status will change from I to R. If condition of fine is true, then details will be stored into fine table. Frame the problem statement for writing PL/SQL block inline with above statement.
+
+MariaDB [(none)]> create database Books;
+Query OK, 1 row affected (0.29 sec)
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| Books                 |
+| information_schema |
+| mysql              |
+| performance_schema |
+| staff              |
++--------------------+
+5 rows in set (0.00 sec)
+MariaDB [(none)]> use Books;
+Database changed
+MariaDB [Books]> create table Borrower(rn int,Name varchar(10),DofI date,Bname varchar(10),Status char(2));
+Query OK, 0 rows affected (0.54 sec)
+
+MariaDB [Books]> desc Borrower;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| rn     | int(11)     | YES  |     | NULL    |       |
+| Name   | varchar(10) | YES  |     | NULL    |       |
+| DofI   | date        | YES  |     | NULL    |       |
+| Bname  | varchar(10) | YES  |     | NULL    |       |
+| Status | char(2)     | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+5 rows in set (0.29 sec)
+
+MariaDB [Books]> create table Fine(rno int,Dorec date,Amt int);
+Query OK, 0 rows affected (0.51 sec)
+
+MariaDB [Books]> desc Fine;
++-------+---------+------+-----+---------+-------+
+| Field | Type    | Null | Key | Default | Extra |
++-------+---------+------+-----+---------+-------+
+| rno   | int(11) | YES  |     | NULL    |       |
+| Dorec | date    | YES  |     | NULL    |       |
+| Amt   | int(11) | YES  |     | NULL    |       |
++-------+---------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+MariaDB [Books]> delimiter /
+MariaDB [Books]> create procedure p1(rnb int,bn varchar(10))
+    -> begin
+    -> declare dif int;
+    -> declare f int;
+    -> declare idate date;
+    -> select DofI into idate from Borrower where rn=rnb and Bname=bn;
+    -> select datediff(now(),idate) into dif;
+    -> if(dif>=15 and dif<=30) then 
+    -> set f=(dif-15)*5;
+    -> insert into Fine values(rnb,now(),f);
+    -> elseif(dif>30) then
+    -> set f=(dif-30)*50+75;
+    -> insert into Fine values(rnb,now(),f);
+    -> end if;
+    -> update Borrower set Status='R' where rn=rnb and Bname=bn;
+    -> end
+    -> ;
+    -> /
+Query OK, 0 rows affected (2.13 sec)
+
+MariaDB [Books]> delimiter ;
+MariaDB [Books]> insert into Borrower values(1,'Mayur','2019-5-20','TOC','I');
+Query OK, 1 row affected (0.33 sec)
+
+MariaDB [Books]> insert into Borrower values(2,'Mangesh','2019-6-20','DBMS','I');
+Query OK, 1 row affected (0.05 sec)
+
+MariaDB [Books]> insert into Borrower values(3,'Ashutosh','2019-7-20','CN','I');
+Query OK, 1 row affected (0.08 sec)
+
+MariaDB [Books]> insert into Borrower values(4,'Hrishi','2019-7-15','ISEE','I');
+Query OK, 1 row affected (0.05 sec)
+
+MariaDB [Books]> insert into Borrower values(5,'Omkar','2019-2-15','SEPM','I');
+Query OK, 1 row affected (0.05 sec)
+
++------+----------+------------+-------+--------+
+| rn   | Name     | DofI       | Bname | Status |
++------+----------+------------+-------+--------+
+|    1 | Mayur    | 2019-05-20 | TOC   |  I    |
+|    2 | Mangesh  | 2019-06-20 | DBMS  | I      |
+|    3 | Ashutosh   | 2019-07-20 | CN    | I      |
+|    4 | Hrishi   | 2019-07-15 | ISEE  | I      |
+|    5 | Omkar | 2019-02-15 | SEPM  | I      |
++------+----------+------------+-------+--------+
+
+MariaDB [Books]> select * from Fine;
+Empty set (0.00 sec)
+
+MariaDB [Books]> call p1(1,'TOC');
+Query OK, 1 row affected (0.36 sec)
+
+MariaDB [Books]> select * from Fine;
++------+------------+------+
+| rno  | Dorec      | Amt  |
++------+------------+------+
+|    1 | 2019-07-29 | 2075 |
++------+------------+------+
+1 row in set (0.00 sec)
+
++------+----------+------------+-------+--------+
+| rn   | Name     | DofI       | Bname | Status |
++------+----------+------------+-------+--------+
+|    1 | Mayur    | 2019-05-20 | TOC   | R      |
+|    2 | Mangesh  | 2019-06-20 | DBMS  | I      |
+|    3 | Ashutosh   | 2019-07-20 | CN    | I      |
+|    4 | Hrishi   | 2019-07-15 | ISEE  | I      |
+|    5 | Omkar | 2019-02-15 | SEPM  | I      |
++------+----------+------------+-------+--------+
+
+
+

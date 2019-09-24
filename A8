@@ -1,0 +1,142 @@
+Experiment No. : A8
+
+Title: Database Trigger (All Types: Row level and Statement level triggers, Before and After Triggers). Write a database trigger on Library table. The System should keep track of the records that are being updated or deleted. The old value of updated or deleted records should be added in Library_Audit table. Frame the problem statement for writing Database Triggers of all types, in-line with above statement. The problem statement should clearly state the requirements.
+
+MariaDB [(none)]> create database library;
+Query OK, 1 row affected (0.014 sec)
+
+MariaDB [(none)]> use library;
+Database changed
+MariaDB [library]> create table library1(id_no int,nameofbook varchar(10));
+Query OK, 0 rows affected (0.366 sec)
+
+MariaDB [library]> desc library1;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| id_no      | int(11)     | YES  |     | NULL    |       |
+| nameofbook | varchar(10) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+2 rows in set (0.002 sec)
+
+MariaDB [library]>  create table lib_audit(lno int,bookname varchar(20));
+Query OK, 0 rows affected (0.309 sec)
+
+MariaDB [library]>  desc lib_audit;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| lno      | int(11)     | YES  |     | NULL    |       |
+| bookname | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+2 rows in set (0.014 sec)
+
+MariaDB [library]> show tables;
++-------------------+
+| Tables_in_library |
++-------------------+
+| lib_audit         |
+| library1          |
++-------------------+
+2 rows in set (0.000 sec)
+
+MariaDB [library]> insert into library1 values(101,'Mayur');
+Query OK, 1 row affected (0.085 sec)
+
+MariaDB [library]> insert into library1 values(102,'Ashutosh');
+Query OK, 1 row affected (0.060 sec)
+
+MariaDB [library]> insert into library1 values(103,'Nitesh');
+Query OK, 1 row affected (0.064 sec)
+
+MariaDB [library]> insert into library1 values(104,'Hrishi');
+Query OK, 1 row affected (0.066 sec)
+
+MariaDB [library]> insert into library1 values(105,'Akash');
+Query OK, 1 row affected (0.042 sec)
+
+MariaDB [library]> select * from library1;
++-------+------------+
+| id_no | nameofbook |
++-------+------------+
+|   101 | Mayur     |
+|   102 | Ashutosh    |
+|   103 | Nitesh     |
+|   104 | Hrishi      |
+|   105 | Akash      |
++-------+------------+
+5 rows in set (0.020 sec)
+
+Before Trigger
+
+MariaDB [library]> delimiter //
+    ->create trigger tr1 before delete on library1 for each row
+    -> begin
+    -> insert into lib_audit values(old.id_no,old.nameofbook);
+    -> end
+    -> //
+Query OK, 0 rows affected (0.322 sec)
+
+MariaDB [library]> delete from library1 where id_no=103;
+    -> //
+Query OK, 1 row affected (0.422 sec)
+
+MariaDB [library]> select * from library1;
+    -> //
++-------+------------+
+| id_no | nameofbook |
++-------+------------+
+|   101 | Mayur     |
+|   102 | Ashutosh    |
+|   104 | Hrishi      |
+|   105 | Akash      |
++-------+------------+
+4 rows in set (0.033 sec)
+
+MariaDB [library]> select * from lib_audit;
+    -> //
++------+----------+
+| lno  | bookname |
++------+----------+
+|  103 | Nitesh   |
++------+----------+
+1 row in set (0.000 sec)
+
+After Trigger
+
+MariaDB [library]> create trigger tr2
+    -> after update on library1
+    -> for each row
+    -> begin
+    -> insert into lib_audit values(old.id_no,old.nameofbook);
+    -> end
+    -> //
+Query OK, 0 rows affected (1.013 sec)
+
+MariaDB [library]> update library1 set nameofbook='Rahul' where id_no=101;
+    -> //
+Query OK, 1 row affected (1.011 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [library]> select * from library1;
+    -> //
++-------+------------+
+| id_no | nameofbook |
++-------+------------+
+|   101 | Rahul      |
+|   102 | Ashutosh    |
+|   104 | Hrishi      |
+|   105 | Akash      |
++-------+------------+
+4 rows in set (0.076 sec)
+
+MariaDB [library]> select * from lib_audit;
+    -> //
++------+----------+
+| lno  | bookname |
++------+----------+
+|  103 | Nitesh   |
+|  101 | Mayur   |
++------+----------+
+2 rows in set (0.000 sec)
+

@@ -1,0 +1,897 @@
+Experiment No. : A4
+
+Title : To Design SQL Queries using Join operations
+
+Table 1:
+
+MariaDB [J0in]> select *from t1;
++------+--------+
+| rno  | city   |
++------+--------+
+|    1 | Pune   |
+|    2 | Mumbai |
+|    3 | Delhi  |
+|    4 | Gujrat |
++------+--------+
+4 rows in set (0.00 sec)
+
+Table 2:
+
+MariaDB [J0in]> select *from t2;
++------+-------+
+| rno  | name  |
++------+-------+
+|    1 | Mayur |
+|    2 | Amit  |
+|    3 | Suraj |
+|    4 | Omkar |
++------+-------+
+4 rows in set (0.00 sec)
+
+NORMAL JOIN                   
+
+MariaDB [J0in]> select *from t1 join t2;
++------+--------+------+-------+
+| rno  | city   | rno  | name  |
++------+--------+------+-------+
+|    1 | Pune   |    1 | Mayur |
+|    2 | Mumbai |    1 | Mayur |
+|    3 | Delhi  |    1 | Mayur |
+|    4 | Gujrat |    1 | Mayur |
+|    1 | Pune   |    2 | Amit  |
+|    2 | Mumbai |    2 | Amit  |
+|    3 | Delhi  |    2 | Amit  |
+|    4 | Gujrat |    2 | Amit  |
+|    1 | Pune   |    3 | Suraj |
+|    2 | Mumbai |    3 | Suraj |
+|    3 | Delhi  |    3 | Suraj |
+|    4 | Gujrat |    3 | Suraj |
+|    1 | Pune   |    4 | Omkar |
+|    2 | Mumbai |    4 | Omkar |
+|    3 | Delhi  |    4 | Omkar |
+|    4 | Gujrat |    4 | Omkar |
++------+--------+------+-------+
+16 rows in set (0.00 sec)
+
+MariaDB [J0in]> select *from t1 join t2 where t1.rno = t2.rno;
++------+--------+------+-------+
+| rno  | city   | rno  | name  |
++------+--------+------+-------+
+|    1 | Pune   |    1 | Mayur |
+|    2 | Mumbai |    2 | Amit  |
+|    3 | Delhi  |    3 | Suraj |
+|    4 | Gujrat |    4 | Omkar |
++------+--------+------+-------+
+4 rows in set (0.00 sec)
+
+MariaDB [J0in]> select *from t1 join t2 on t1.rno = t2.rno;
++------+--------+------+-------+
+| rno  | city   | rno  | name  |
++------+--------+------+-------+
+|    1 | Pune   |    1 | Mayur |
+|    2 | Mumbai |    2 | Amit  |
+|    3 | Delhi  |    3 | Suraj |
+|    4 | Gujrat |    4 | Omkar |
++------+--------+------+-------+
+4 rows in set (0.00 sec)
+
+INNER JOIN
+
+MariaDB [J0in]> select *from t1 inner join t2 on t1.rno = t2.rno;
++------+--------+------+-------+
+| rno  | city   | rno  | name  |
++------+--------+------+-------+
+|    1 | Pune   |    1 | Mayur |
+|    2 | Mumbai |    2 | Amit  |
+|    3 | Delhi  |    3 | Suraj |
+|    4 | Gujrat |    4 | Omkar |
++------+--------+------+-------+
+4 rows in set (0.00 sec)
+
+MariaDB [J0in]> select *from t2 inner join t1 on t2.rno = t1.rno;
++------+-------+------+--------+
+| rno  | name  | rno  | city   |
++------+-------+------+--------+
+|    1 | Mayur |    1 | Pune   |
+|    2 | Amit  |    2 | Mumbai |
+|    3 | Suraj |    3 | Delhi  |
+|    4 | Omkar |    4 | Gujrat |
++------+-------+------+--------+
+4 rows in set (0.00 sec)
+
+
+MariaDB [J0in]> select *from t1 inner join t2;
++------+--------+------+-------+
+| rno  | city   | rno  | name  |
++------+--------+------+-------+
+|    1 | Pune   |    1 | Mayur |
+|    2 | Mumbai |    1 | Mayur |
+|    3 | Delhi  |    1 | Mayur |
+|    4 | Gujrat |    1 | Mayur |
+|    1 | Pune   |    2 | Amit  |
+|    2 | Mumbai |    2 | Amit  |
+|    3 | Delhi  |    2 | Amit  |
+|    4 | Gujrat |    2 | Amit  |
+|    1 | Pune   |    3 | Suraj |
+|    2 | Mumbai |    3 | Suraj |
+|    3 | Delhi  |    3 | Suraj |
+|    4 | Gujrat |    3 | Suraj |
+|    1 | Pune   |    4 | Omkar |
+|    2 | Mumbai |    4 | Omkar |
+|    3 | Delhi  |    4 | Omkar |
+|    4 | Gujrat |    4 | Omkar |
++------+--------+------+-------+
+16 rows in set (0.00 sec)
+
+MariaDB [J0in]> select t1.rno,name,city from t1 inner join t2 on t1.rno = t2.rno;
++------+-------+--------+
+| rno  | name  | city   |
++------+-------+--------+
+|    1 | Mayur | Pune   |
+|    2 | Amit  | Mumbai |
+|    3 | Suraj | Delhi  |
+|    4 | Omkar | Gujrat |
++------+-------+--------+
+4 rows in set (0.00 sec)
+
+RIGHT JOIN/RIGHT OUTER JOIN
+
+MariaDB [J0in]> select *from t1 right join t2 on t1.rno = t2.rno;
++------+--------+------+-------+
+| rno  | city   | rno  | name  |
++------+--------+------+-------+
+|    1 | Pune   |    1 | Mayur |
+|    2 | Mumbai |    2 | Amit  |
+|    3 | Delhi  |    3 | Suraj |
+|    4 | Gujrat |    4 | Omkar |
++------+--------+------+-------+
+4 rows in set (0.00 sec)
+
+MariaDB [J0in]> select *from t1 right outer join t2 on t1.rno = t2.rno;
++------+--------+------+-------+
+| rno  | city   | rno  | name  |
++------+--------+------+-------+
+|    1 | Pune   |    1 | Mayur |
+|    2 | Mumbai |    2 | Amit  |
+|    3 | Delhi  |    3 | Suraj |
+|    4 | Gujrat |    4 | Omkar |
++------+--------+------+-------+
+4 rows in set (0.00 sec)
+
+MariaDB [J0in]> select t1.rno,name,city from t2 right join t1 on t1.rno = t2.rno;
++------+-------+--------+
+| rno  | name  | city   |
++------+-------+--------+
+|    1 | Mayur | Pune   |
+|    2 | Amit  | Mumbai |
+|    3 | Suraj | Delhi  |
+|    4 | Omkar | Gujrat |
++------+-------+--------+
+4 rows in set (0.00 sec)
+
+MariaDB [J0in]> select t2.rno,name,city from t2 right join t1 on t1.rno = t2.rno;
++------+-------+--------+
+| rno  | name  | city   |
++------+-------+--------+
+|    1 | Mayur | Pune   |
+|    2 | Amit  | Mumbai |
+|    3 | Suraj | Delhi  |
+|    4 | Omkar | Gujrat |
++------+-------+--------+
+4 rows in set (0.17 sec)
+
+MariaDB [J0in]> select * from t1 right join t2 on t1.rno = t2.rno;
++------+--------+------+-------+
+| rno  | city   | rno  | name  |
++------+--------+------+-------+
+|    1 | Pune   |    1 | Mayur |
+|    2 | Mumbai |    2 | Amit  |
+|    3 | Delhi  |    3 | Suraj |
+|    4 | Gujrat |    4 | Omkar |
++------+--------+------+-------+
+4 rows in set (0.00 sec)
+
+MariaDB [J0in]> select t1.rno,city,name from t1 right join t2 on t1.rno=t2.rno;
++------+--------+-------+
+| rno  | city   | name  |
++------+--------+-------+
+|    1 | Pune   | Mayur |
+|    2 | Mumbai | Amit  |
+|    3 | Delhi  | Suraj |
+|    4 | Gujrat | Omkar |
++------+--------+-------+
+4 rows in set (0.02 sec)
+
+MariaDB [J0in]> select t2.rno,city,name from t2 right join t1 on t1.rno=t2.rno;
++------+--------+-------+
+| rno  | city   | name  |
++------+--------+-------+
+|    1 | Pune   | Mayur |
+|    2 | Mumbai | Amit  |
+|    3 | Delhi  | Suraj |
+|    4 | Gujrat | Omkar |
++------+--------+-------+
+4 rows in set (0.00 sec)
+
+LEFT JOIN/LEFT OUTER JOIN
+
+MariaDB [J0in]> select *from t1 left join t2 on t1.rno = t2.rno;
++------+--------+------+-------+
+| rno  | city   | rno  | name  |
++------+--------+------+-------+
+|    1 | Pune   |    1 | Mayur |
+|    2 | Mumbai |    2 | Amit  |
+|    3 | Delhi  |    3 | Suraj |
+|    4 | Gujrat |    4 | Omkar |
++------+--------+------+-------+
+4 rows in set (0.01 sec)
+
+MariaDB [J0in]> select *from t2 left join t1 on t1.rno = t2.rno;
++------+-------+------+--------+
+| rno  | name  | rno  | city   |
++------+-------+------+--------+
+|    1 | Mayur |    1 | Pune   |
+|    2 | Amit  |    2 | Mumbai |
+|    3 | Suraj |    3 | Delhi  |
+|    4 | Omkar |    4 | Gujrat |
++------+-------+------+--------+
+4 rows in set (0.00 sec)
+
+MariaDB [J0in]> select t1.rno,city,name from t1 left join t2 on t1.rno=t2.rno;
++------+--------+-------+
+| rno  | city   | name  |
++------+--------+-------+
+|    1 | Pune   | Mayur |
+|    2 | Mumbai | Amit  |
+|    3 | Delhi  | Suraj |
+|    4 | Gujrat | Omkar |
++------+--------+-------+
+4 rows in set (0.01 sec)
+
+MariaDB [J0in]> select t2.rno,city,name from t2 left join t1 on t1.rno=t2.rno;
++------+--------+-------+
+| rno  | city   | name  |
++------+--------+-------+
+|    1 | Pune   | Mayur |
+|    2 | Mumbai | Amit  |
+|    3 | Delhi  | Suraj |
+|    4 | Gujrat | Omkar |
++------+--------+-------+
+4 rows in set (0.01 sec)
+
+MariaDB [J0in]> select t2.rno,city,name from t1 left join t2 on t1.rno=t2.rno;
++------+--------+-------+
+| rno  | city   | name  |
++------+--------+-------+
+|    1 | Pune   | Mayur |
+|    2 | Mumbai | Amit  |
+|    3 | Delhi  | Suraj |
+|    4 | Gujrat | Omkar |
++------+--------+-------+
+4 rows in set (0.02 sec)
+
+MariaDB [J0in]> select t1.rno,city,name from t2 left join t1 on t1.rno=t2.rno;
++------+--------+-------+
+| rno  | city   | name  |
++------+--------+-------+
+|    1 | Pune   | Mayur |
+|    2 | Mumbai | Amit  |
+|    3 | Delhi  | Suraj |
+|    4 | Gujrat | Omkar |
++------+--------+-------+
+4 rows in set (0.00 sec)
+
+
+
+NATURAL JOIN
+
+MariaDB [J0in]> select *from t1 natural join t2;
++------+--------+-------+
+| rno  | city   | name  |
++------+--------+-------+
+|    1 | Pune   | Mayur |
+|    2 | Mumbai | Amit  |
+|    3 | Delhi  | Suraj |
+|    4 | Gujrat | Omkar |
++------+--------+-------+
+4 rows in set (0.00 sec)
+
+MariaDB [J0in]> select t1.rno,city,name from t1 natural join t2;
++------+--------+-------+
+| rno  | city   | name  |
++------+--------+-------+
+|    1 | Pune   | Mayur |
+|    2 | Mumbai | Amit  |
+|    3 | Delhi  | Suraj |
+|    4 | Gujrat | Omkar |
++------+--------+-------+
+4 rows in set (0.00 sec)
+
+MariaDB [J0in]> select t1.rno,city,name from t2 natural join t1;
++------+--------+-------+
+| rno  | city   | name  |
++------+--------+-------+
+|    1 | Pune   | Mayur |
+|    2 | Mumbai | Amit  |
+|    3 | Delhi  | Suraj |
+|    4 | Gujrat | Omkar |
++------+--------+-------+
+4 rows in set (0.03 sec)
+
+MariaDB [J0in]> select t2.rno,city,name from t2 natural join t1;
++------+--------+-------+
+| rno  | city   | name  |
++------+--------+-------+
+|    1 | Pune   | Mayur |
+|    2 | Mumbai | Amit  |
+|    3 | Delhi  | Suraj |
+|    4 | Gujrat | Omkar |
++------+--------+-------+
+4 rows in set (0.02 sec)
+
+CROSS JOIN
+
+MariaDB [J0in]> select t1.rno,city,name from t1 cross join t2;
++------+--------+-------+
+| rno  | city   | name  |
++------+--------+-------+
+|    1 | Pune   | Mayur |
+|    2 | Mumbai | Mayur |
+|    3 | Delhi  | Mayur |
+|    4 | Gujrat | Mayur |
+|    1 | Pune   | Amit  |
+|    2 | Mumbai | Amit  |
+|    3 | Delhi  | Amit  |
+|    4 | Gujrat | Amit  |
+|    1 | Pune   | Suraj |
+|    2 | Mumbai | Suraj |
+|    3 | Delhi  | Suraj |
+|    4 | Gujrat | Suraj |
+|    1 | Pune   | Omkar |
+|    2 | Mumbai | Omkar |
+|    3 | Delhi  | Omkar |
+|    4 | Gujrat | Omkar |
++------+--------+-------+
+16 rows in set (0.00 sec)
+
+MariaDB [J0in]> select *from t1 cross join t2;
++------+--------+------+-------+
+| rno  | city   | rno  | name  |
++------+--------+------+-------+
+|    1 | Pune   |    1 | Mayur |
+|    2 | Mumbai |    1 | Mayur |
+|    3 | Delhi  |    1 | Mayur |
+|    4 | Gujrat |    1 | Mayur |
+|    1 | Pune   |    2 | Amit  |
+|    2 | Mumbai |    2 | Amit  |
+|    3 | Delhi  |    2 | Amit  |
+|    4 | Gujrat |    2 | Amit  |
+|    1 | Pune   |    3 | Suraj |
+|    2 | Mumbai |    3 | Suraj |
+|    3 | Delhi  |    3 | Suraj |
+|    4 | Gujrat |    3 | Suraj |
+|    1 | Pune   |    4 | Omkar |
+|    2 | Mumbai |    4 | Omkar |
+|    3 | Delhi  |    4 | Omkar |
+|    4 | Gujrat |    4 | Omkar |
++------+--------+------+-------+
+16 rows in set (0.00 sec)
+
+MariaDB [J0in]> select *from t2 cross join t1;
++------+-------+------+--------+
+| rno  | name  | rno  | city   |
++------+-------+------+--------+
+|    1 | Mayur |    1 | Pune   |
+|    2 | Amit  |    1 | Pune   |
+|    3 | Suraj |    1 | Pune   |
+|    4 | Omkar |    1 | Pune   |
+|    1 | Mayur |    2 | Mumbai |
+|    2 | Amit  |    2 | Mumbai |
+|    3 | Suraj |    2 | Mumbai |
+|    4 | Omkar |    2 | Mumbai |
+|    1 | Mayur |    3 | Delhi  |
+|    2 | Amit  |    3 | Delhi  |
+|    3 | Suraj |    3 | Delhi  |
+|    4 | Omkar |    3 | Delhi  |
+|    1 | Mayur |    4 | Gujrat |
+|    2 | Amit  |    4 | Gujrat |
+|    3 | Suraj |    4 | Gujrat |
+|    4 | Omkar |    4 | Gujrat |
++------+-------+------+--------+
+16 rows in set (0.00 sec)
+
+MariaDB [J0in]> select t2.rno,city,name from t2 cross join t1;
++------+--------+-------+
+| rno  | city   | name  |
++------+--------+-------+
+|    1 | Pune   | Mayur |
+|    2 | Pune   | Amit  |
+|    3 | Pune   | Suraj |
+|    4 | Pune   | Omkar |
+|    1 | Mumbai | Mayur |
+|    2 | Mumbai | Amit  |
+|    3 | Mumbai | Suraj |
+|    4 | Mumbai | Omkar |
+|    1 | Delhi  | Mayur |
+|    2 | Delhi  | Amit  |
+|    3 | Delhi  | Suraj |
+|    4 | Delhi  | Omkar |
+|    1 | Gujrat | Mayur |
+|    2 | Gujrat | Amit  |
+|    3 | Gujrat | Suraj |
+|    4 | Gujrat | Omkar |
++------+--------+-------+
+16 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   TYPES OF SUBQUERIES
+
+
+1.SINGLE ROW SUB-QUERY
+Ex 1: Display the information of employee,paid more than 'pooja' from emp table.
+
+MariaDB [TEA]> select salary from emp where ename = 'POOJA';
+
++--------+
+
+| salary |
+
++--------+
+
+|  50000 |
+
++--------+
+
+1 row in set (0.00 sec)
+
+
+MariaDB [TEA]> select *from emp where salary>(select salary from emp where ename ='POOJA');
+
++------+-------+--------+---------+--------+
+
+| eid  | ename | city   | post    | salary |
+
++------+-------+--------+---------+--------+
+
+|    4 | SEEMA | MUMBAI | MANAGER |  70000 |
+
+|    2 | PRIYA | MUMBAI | MANAGER |  60000 |
+
++------+-------+--------+---------+--------+
+
+2 rows in set (0.01 sec)
+
+
+
+Ex 2.List the name of the employees,who lives in same city as of 'SEEMA'.
+
+MariaDB [TEA]> select city from emp where ename = 'SEEMA';
+
++--------+
+
+| city   |
+
++--------+
+
+| MUMBAI |
+
++--------+
+
+1 row in set (0.00 sec)
+
+
+
+MariaDB [TEA]> select *from emp where city = (select city from emp where ename = 'SEEMA');
+
++------+-------+--------+---------+--------+
+
+| eid  | ename | city   | post    | salary |
+
++------+-------+--------+---------+--------+
+
+|    4 | SEEMA | MUMBAI | MANAGER |  70000 |
+
+|    2 | PRIYA | MUMBAI | MANAGER |  60000 |
+
++------+-------+--------+---------+--------+
+
+2 rows in set (0.00 sec)
+
+
+Ex 3.Display the information of employees, paid less salary than average salary throughout the company 
+
+MariaDB [TEA]> select avg(salary) from emp;
+
++-------------+
+
+| avg(salary) |
+
++-------------+
+
+|  52500.0000 |
+
++-------------+
+
+1 row in set (0.01 sec)
+
+
+
+MariaDB [TEA]> select *from emp where salary < (select avg(salary) from emp);
+
++------+-------+------------+-----------+--------+
+
+| eid  | ename | city       | post      | salary |
+
++------+-------+------------+-----------+--------+
+
+|    1 | POOJA | PUNE       | DEVELOPER |  50000 |
+
+|    3 | JOHN  | AURANGABAD | ANALYST   |  30000 |
+
++------+-------+------------+-----------+--------+
+
+2 rows in set (0.00 sec)
+
+
+Ex 4:Display the information of employees having maximum salary in company.
+
+MariaDB [TEA]> select *from emp where salary = (select max(salary) from emp);
+
++------+-------+--------+---------+--------+
+
+| eid  | ename | city   | post    | salary |
+
++------+-------+--------+---------+--------+
+
+|    4 | SEEMA | MUMBAI | MANAGER |  70000 |
+
++------+-------+--------+---------+--------+
+
+1 row in set (0.00 sec)
+
+
+
+2.MULTIPLE ROW SUB-QUERY
+
+MariaDB [TEA]> create table empnew(eid int,ename varchar(21),city varchar(11),post varchar(7),salary int,deptno int);
+
+Query OK, 0 rows affected (0.04 sec)
+
+
+
+MariaDB [TEA]> load data local infile '/home/student/TEA 64/DBMS/data.txt' into table empnew fields terminated by ' ';
+
+Query OK, 11 rows affected, 9 warnings (0.02 sec)    
+
+Records: 11  Deleted: 0  Skipped: 0  Warnings: 9
+
+
+
+MariaDB [TEA]> select *from empnew;
+
++------+---------+------------+---------+--------+--------+
+
+| eid  | ename   | city       | post    | salary | deptno |
+
++------+---------+------------+---------+--------+--------+
+
+|    0 | John    | Nashik     | Clerk   |   5000 |     10 |
+
+|    2 | Seema   | Aurangabad | Develop |  20000 |     20 |
+
+|    3 | Asmita  | Nagar      | Manager |  70000 |     20 |
+
+|    4 | Rakesh  | Pune       | Analyst |   8000 |     10 |
+
+|    5 | Samata  | Nashik     | Tester  |  20000 |     10 |
+
+|    6 | Ankita  | Chandwad   | Develop |  30000 |     30 |
+
+|    7 | Bhavika | Pune       | Team-LR |  50000 |     30 |
+
+|    8 | Deepa   | Mumbai     | CEO     |  90000 |     10 |
+
+|    9 | Nitin   | Nagpur     | Clerk   |   8000 |     30 |
+
+|   10 | Akshay  | Pune       | Analyst |  45000 |     20 |
+
+|    0 | NULL    | NULL       | NULL    |   NULL |   NULL |
+
++------+---------+------------+---------+--------+--------+
+
+11 rows in set (0.00 sec)
+
+
+
+MariaDB [TEA]> update empnew set eid=1 where ename = 'John';
+
+Query OK, 1 row affected (0.01 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+
+
+
+MariaDB [TEA]> select *from empnew;
+
++------+---------+------------+---------+--------+--------+
+
+| eid  | ename   | city       | post    | salary | deptno |
+
++------+---------+------------+---------+--------+--------+
+
+|    1 | John    | Nashik     | Clerk   |   5000 |     10 |
+
+|    2 | Seema   | Aurangabad | Develop |  20000 |     20 |
+
+|    3 | Asmita  | Nagar      | Manager |  70000 |     20 |
+
+|    4 | Rakesh  | Pune       | Analyst |   8000 |     10 |
+
+|    5 | Samata  | Nashik     | Tester  |  20000 |     10 |
+
+|    6 | Ankita  | Chandwad   | Develop |  30000 |     30 |
+
+|    7 | Bhavika | Pune       | Team-LR |  50000 |     30 |
+
+|    8 | Deepa   | Mumbai     | CEO     |  90000 |     10 |
+
+|    9 | Nitin   | Nagpur     | Clerk   |   8000 |     30 |
+
+|   10 | Akshay  | Pune       | Analyst |  45000 |     20 |
+
+|    0 | NULL    | NULL       | NULL    |   NULL |   NULL |
+
++------+---------+------------+---------+--------+--------+
+
+11 rows in set (0.00 sec)
+
+
+
+
+Ex 1: IN Example
+Display the employee name,salary and department no of those employees whose salary is the minimum salary of that department.
+
+MariaDB [TEA]> select min(salary) from empnew group by  deptno;
+
++-------------+
+
+| min(salary) |
+
++-------------+
+
+|        NULL |
+
+|        5000 |
+
+|       20000 |
+
+|        8000 |
+
++-------------+
+
+4 rows in set (0.00 sec)
+
+MariaDB [TEA]> select ename, salary, deptno FROM empnew WHERE salary IN(select min(salary)from empnew GROUP BY deptno);
+
++--------+--------+--------+
+
+| ename  | salary | deptno |
+
++--------+--------+--------+
+
+| John   |   5000 |     10 |
+
+| Seema  |  20000 |     20 |
+
+| Rakesh |   8000 |     10 |
+
+| Samata |  20000 |     10 |
+
+| Nitin  |   8000 |     30 |
+
++--------+--------+--------+
+
+5 rows in set (0.00 sec)
+
+
+Ex 2: > All Example
+Display the employee name, salary,department no of those employees whose salary is higher than all developers salary.
+
+MariaDB [TEA]> SELECT salary from empnew where post='Develop';
+
++--------+
+
+| salary |
+
++--------+
+
+|  20000 |
+
+|  30000 |
+
++--------+
+
+2 rows in set (0.00 sec)
+
+MariaDB [TEA]> select ename, salary, deptno FROM empnew WHERE salary > All(select salary from empnew where post='Develop');
+
++---------+--------+--------+
+
+| ename   | salary | deptno |
+
++---------+--------+--------+
+
+| Asmita  |  70000 |     20 |
+
+| Bhavika |  50000 |     30 |
+
+| Deepa   |  90000 |     10 |
+
+| Akshay  |  45000 |     20 |
+
++---------+--------+--------+
+
+4 rows in set (0.00 sec)
+
+
+Ex 2: < All Example
+Display the employee name, salary,department no of those employees whose salary is lower than all developers salary.
+
+MariaDB [TEA]> select ename, salary, deptno FROM empnew WHERE salary < All(select salary from empnew where post='Develop');
+
++--------+--------+--------+
+
+| ename  | salary | deptno |
+
++--------+--------+--------+
+
+| John   |   5000 |     10 |
+
+| Rakesh |   8000 |     10 |
+
+| Nitin  |   8000 |     30 |
+
++--------+--------+--------+
+
+3 rows in set (0.00 sec)
+
+
+Ex 3: > Any Example
+Display the employee name,salary and deptartmentno of those employees whose salary is higher than salary of developers salary.
+
+MariaDB [TEA]> select ename, salary, deptno FROM empnew WHERE salary > Any(select salary from empnew where post='Develop');
+
++---------+--------+--------+
+
+| ename   | salary | deptno |
+
++---------+--------+--------+
+
+| Asmita  |  70000 |     20 |
+
+| Ankita  |  30000 |     30 |
+
+| Bhavika |  50000 |     30 |
+
+| Deepa   |  90000 |     10 |
+
+| Akshay  |  45000 |     20 |
+
++---------+--------+--------+
+
+5 rows in set (0.00 sec)
+
+
+Ex 4: < Any Example
+Display the employee name,salary and deptartmentno of those employees whose salary is less than salary of developers salary.
+
+MariaDB [TEA]> select ename, salary, deptno FROM empnew WHERE salary < Any(select salary from empnew where post='Develop');
+
++--------+--------+--------+
+
+| ename  | salary | deptno |
+
++--------+--------+--------+
+
+| John   |   5000 |     10 |
+
+| Seema  |  20000 |     20 |
+
+| Rakesh |   8000 |     10 |
+
+| Samata |  20000 |     10 |
+
+| Nitin  |   8000 |     30 |
+
++--------+--------+--------+
+
+5 rows in set (0.00 sec)
+
+
+3.Correlated SUB-QUERY
+
+
+MariaDB [TEA]> delete from empnew where eid>8;
+Query OK, 2 rows affected (0.01 sec)
+
+MariaDB [TEA]> select *from empnew;
+
++------+---------+------------+---------+--------+--------+
+
+| eid  | ename   | city       | post    | salary | deptno |
+
++------+---------+------------+---------+--------+--------+
+
+|    1 | John    | Nashik     | Clerk   |   5000 |     10 |
+
+|    2 | Seema   | Aurangabad | Develop |  20000 |     20 |
+
+|    3 | Asmita  | Nagar      | Manager |  70000 |     20 |
+
+|    4 | Rakesh  | Pune       | Analyst |   8000 |     10 |
+
+|    5 | Samata  | Nashik     | Tester  |  20000 |     10 |
+
+|    6 | Ankita  | Chandwad   | Develop |  30000 |     30 |
+
+|    7 | Bhavika | Pune       | Team-LR |  50000 |     30 |
+
+|    8 | Deepa   | Mumbai     | CEO     |  90000 |     10 |
+
+|    0 | NULL    | NULL       | NULL    |   NULL |   NULL |
+
++------+---------+------------+---------+--------+--------+
+
+9 rows in set (0.00 sec)
+
+MariaDB [TEA]> select * from emp where not exists(select *from empnew where emp.eid = empnew.eid);
+
+Empty set (0.00 sec)
+
+MariaDB [TEA]> select * from emp where exists(select *from empnew where emp.eid = empnew.eid);
+
++------+-------+------------+-----------+--------+
+
+| eid  | ename | city       | post      | salary |
+
++------+-------+------------+-----------+--------+
+
+|    1 | POOJA | PUNE       | DEVELOPER |  50000 |
+
+|    3 | JOHN  | AURANGABAD | ANALYST   |  30000 |
+
+|    4 | SEEMA | MUMBAI     | MANAGER   |  70000 |
+
+|    2 | PRIYA | MUMBAI     | MANAGER   |  60000 |
++------+-------+------------+-----------+--------+
+
