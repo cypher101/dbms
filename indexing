@@ -1,0 +1,97 @@
+Experiment No. : B3
+Title : Indexing functions
+> db.te.ensureIndex({no:4});
+{       "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 1,
+        "numIndexesAfter" : 2,
+        "ok" : 1	}
+> db.te.find({no:1}).explain();
+{	 "queryPlanner" : {
+                "plannerVersion" : 1,
+                "namespace" : "Mayur.te",
+                "indexFilterSet" : false,
+                "parsedQuery" : 
+                 {       "no" : {
+                                "$eq" : 1	}
+       	  },
+                "queryHash" : "8493D2E9",
+                "planCacheKey" : "1367014D",
+                "winningPlan" : {
+                        "stage" : "FETCH",
+                        "inputStage" : {
+                                "stage" : "IXSCAN",
+                                "keyPattern" : {
+                                        "no" : 4	 },
+                                "indexName" : "no_4",
+                                "isMultiKey" : false,
+                                "multiKeyPaths" : {
+                                        "no" : [ ]	},
+                                "isUnique" : false,
+                                "isSparse" : false,
+                                "isPartial" : false,
+                                "indexVersion" : 2,
+                                "direction" : "forward",
+                                "indexBounds" : {
+                                        "no" : [
+                                                "[1.0, 1.0]"
+                                        ]
+                                }
+                        }
+                },
+                "rejectedPlans" : [ ]
+        },
+        "serverInfo" : {
+                "host" : "LAPTOP-92LNERA6",
+                "port" : 27017,
+                "version" : "4.2.0",
+                "gitVersion" : "a4b751dcf51dd249c5865812b390cfd1c0129c30"
+        },
+        "ok" : 1
+}
+> db.te.getIndexes();
+[
+        {
+                "v" : 2,
+                "key" : {
+                        "_id" : 1
+                },
+                "name" : "_id_",
+                "ns" : "Mayur.te"
+        },
+        {
+                "v" : 2,
+                "key" : {
+                        "no" : 4
+                },
+                "name" : "no_4",
+                "ns" : "Mayur.te"
+        }
+]
+> db.te.dropIndex({no:4});
+{ "nIndexesWas" : 2, "ok" : 1 }
+> db.te.getIndexes();
+[{
+                "v" : 2,
+                "key" : {	"_id" : 1	},
+                "name" : "_id_",
+                "ns" : "Mayur.te"	}]
+> var mf=function (){emit(this.dept,this.per)};
+> var rf=function(key,val){return Array.sum(val)};
+> db.te.mapReduce(mf,rf,{'out':'res'});
+{	"result" : "res",
+        "timeMillis" : 1147,
+        "counts" : {
+                "input" : 4,
+                "emit" : 4,
+                "reduce" : 1,
+                "output" : 3	},
+        "ok" : 1	}
+> db.te.find();
+{ "_id" : ObjectId("5d81b7cc030a8d40ad8f78a2"), "no" : 1, "name" : "Mayur", "dept" : "comp", "per" : 78 }
+{ "_id" : ObjectId("5d81b7d5030a8d40ad8f78a3"), "no" : 2, "name" : "harshal", "dept" : "comp", "per" : 80 }
+{ "_id" : ObjectId("5d81b7e5030a8d40ad8f78a4"), "no" : 3, "name" : "rushi", "dept" : "IT", "per" : 70 }
+{ "_id" : ObjectId("5d81b7f6030a8d40ad8f78a5"), "no" : 4, "name" : "om", "dept" : "mcch", "per" : 68 }
+> db.res.find();
+{ "_id" : "IT", "value" : 70 }
+{ "_id" : "comp", "value" : 158 }
+{ "_id" : "mcch", "value" : 68 }

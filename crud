@@ -1,0 +1,136 @@
+Experiment No. : B2
+Title : CRUD Operations
+> show dbs;
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+test    0.000GB
+> use Mangesh;
+switched to db Mangesh
+> show tables;
+> show dbs;
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+test    0.000GB
+createCollection()
+> db.createCollection("tea");
+{ "ok" : 1 }
+> show dbs;
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+Mangesh  0.000GB
+test    0.000GB
+> show tables;
+Tea
+Insert()
+> db.tea.insert({no:1,name:"Mangesh"});
+WriteResult({ "nInserted" : 1 })
+> db.tea.insert({no:2,name:"Mayur"});
+WriteResult({ "nInserted" : 1 })
+Find():
+> db.tea.find({no:1},{name:1});
+{ "_id" : ObjectId("5d81abf56bb5491e02ca30d8"), "name" : "Mangesh" }
+> db.tea.find({no:1},{name:0});
+{ "_id" : ObjectId("5d81abf56bb5491e02ca30d8"), "no" : 1 }
+> db.tea.find({no:1},{_id:0});
+{ "no" : 1, "name" : "Mangesh" }
+> db.tea.find({no:1},{_id:1});
+{ "_id" : ObjectId("5d81abf56bb5491e02ca30d8") }
+> db.tea.find({no:1});
+{ "_id" : ObjectId("5d81abf56bb5491e02ca30d8"), "no" : 1, "name" : "Mangesh" }
+> db.tea.find({});
+{ "_id" : ObjectId("5d81abf56bb5491e02ca30d8"), "no" : 1, "name" : "Mangesh" }
+{ "_id" : ObjectId("5d81ac4c6bb5491e02ca30d9"), "no" : 2, "name" : "Mayur" }
+> db.tea.find();
+{ "_id" : ObjectId("5d81abf56bb5491e02ca30d8"), "no" : 1, "name" : "Mangesh" }
+{ "_id" : ObjectId("5d81ac4c6bb5491e02ca30d9"), "no" : 2, "name" : "Mayur" }
+Update()
+> db.tea.update({no:1},{$set:{name:"Ashitosh"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.tea.find();
+{ "_id" : ObjectId("5d81abf56bb5491e02ca30d8"), "no" : 1, "name" : "Ashitosh" }
+{ "_id" : ObjectId("5d81ac4c6bb5491e02ca30d9"), "no" : 2, "name" : "Mayur" }
+> db.tea.insert({no:2,name:"Mayur"});
+WriteResult({ "nInserted" : 1 })
+> db.tea.find();
+{ "_id" : ObjectId("5d81abf56bb5491e02ca30d8"), "no" : 1, "name" : "Ashitosh" }
+{ "_id" : ObjectId("5d81ac4c6bb5491e02ca30d9"), "no" : 2, "name" : "Mayur" }
+{ "_id" : ObjectId("5d81afbd6bb5491e02ca30da"), "no" : 2, "name" : "Mayur" }
+> db.tea.update({no:2},{$set:{name:"Mangesh"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.tea.find();
+{ "_id" : ObjectId("5d81abf56bb5491e02ca30d8"), "no" : 1, "name" : "Ashitosh" }
+{ "_id" : ObjectId("5d81ac4c6bb5491e02ca30d9"), "no" : 2, "name" : "Mangesh" }
+{ "_id" : ObjectId("5d81afbd6bb5491e02ca30da"), "no" : 2, "name" : "Mayur" }
+> db.tea.update({no:2},{$set:{name:"Mangesh"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 0 })
+> db.tea.updateMany({no:2},{$set:{name:"Mangesh"}});
+{ "acknowledged" : true, "matchedCount" : 2, "modifiedCount" : 1 }
+> db.tea.find();
+{ "_id" : ObjectId("5d81abf56bb5491e02ca30d8"), "no" : 1, "name" : "Ashitosh" }
+{ "_id" : ObjectId("5d81ac4c6bb5491e02ca30d9"), "no" : 2, "name" : "Mangesh" }
+{ "_id" : ObjectId("5d81afbd6bb5491e02ca30da"), "no" : 2, "name" : "Mangesh" }
+> db.tea.remove({no:2});
+WriteResult({ "nRemoved" : 2 })
+> db.tea.find();
+{ "_id" : ObjectId("5d81abf56bb5491e02ca30d8"), "no" : 1, "name" : "Ashitosh" }
+> db.tea.insert({no:2,name:"Mayur"});
+WriteResult({ "nInserted" : 1 })
+> db.tea.find();
+{ "_id" : ObjectId("5d81abf56bb5491e02ca30d8"), "no" : 1, "name" : "Ashitosh" }
+{ "_id" : ObjectId("5d81b04b6bb5491e02ca30db"), "no" : 2, "name" : "Mayur" }
+Remove()
+> db.tea.remove({});
+WriteResult({ "nRemoved" : 2 })
+> db.tea.find();
+> show tables;
+Tea
+Drop()
+> db.tea.drop();
+true
+> show tables;
+> show dbs;
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+test    0.000GB
+> use Mangesh;
+switched to db Mangesh
+> db.createCollection("te");
+{ "ok" : 1 }
+> show tables;
+te
+> show dbs;
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+Mangesh  0.000GB
+test    0.000GB
+dropDatabase():
+> db.dropDatabase;
+function(writeConcern) {
+    return this._dbCAshitoshmand(
+        {dropDatabase: 1, writeConcern: writeConcern ? writeConcern : _defaultWriteConcern});
+}
+> show dbs;
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+Mangesh  0.000GB
+test    0.000GB
+> db.te.find();
+> db.tea.insert({no:2,name:"Mayur"});
+WriteResult({ "nInserted" : 1 })
+> db.te.find();
+> db.te.insert({no:2,name:"Mayur"});
+WriteResult({ "nInserted" : 1 })
+> db.te.find();
+{ "_id" : ObjectId("5d81b2026bb5491e02ca30dd"), "no" : 2, "name" : "Mayur" }
+> db.dropDatabase();
+{ "dropped" : "Mangesh", "ok" : 1 }
+> show dbs;
+admin   0.000GB
+config  0.000GB
+local   0.000GB

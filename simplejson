@@ -1,0 +1,105 @@
+
+Title : Create simple objects and array objects using JSON
+
+Theory:
+
+What is JSON
+JSON: JavaScript Object Notation.
+
+Exchanging Data
+When exchanging data between a browser and a server, the data can only be text.
+
+JSON is text, and we can convert any JavaScript object into JSON, and send JSON to the server.
+
+We can also convert any JSON received from the server into JavaScript objects.
+
+This way we can work with the data as JavaScript objects, with no complicated parsing and translations.
+
+Sending Data
+If you have data stored in a JavaScript object, you can convert the object into JSON, and send it to a server:
+
+Example
+var myObj = {name: "John", age: 31, city: "New York"};
+var myJSON = JSON.stringify(myObj);
+window.location = "demo_json.php?x=" + myJSON;
+You will learn more about the JSON.stringify() function later in this tutorial.
+
+Receiving Data
+If you receive data in JSON format, you can convert it into a JavaScript object:
+
+JSON Syntax Rules
+JSON syntax is derived from JavaScript object notation syntax:
+
+Data is in name/value pairs
+Data is separated by commas
+Curly braces hold objects
+Square brackets hold arrays
+JSON Data - A Name and a Value
+JSON data is written as name/value pairs.
+
+A name/value pair consists of a field name (in double quotes), followed by a colon, followed by a value:
+
+Example
+"name":"John"
+JSON names require double quotes. JavaScript names don't.
+
+JSON - Evaluates to JavaScript Objects
+The JSON format is almost identical to JavaScript objects.
+
+In JSON, keys must be strings, written with double quotes:
+
+JSON
+{ "name":"John" }
+
+
+
+import java.io.StringWriter;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonWriter;
+
+public class JSONObj {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		 JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+	        jsonBuilder.add("emp_name", "Nataraj G");
+	        jsonBuilder.add("emp_id", 1016);
+	        jsonBuilder.add("salary", 20000);
+	         
+	        // create Json array with only values
+	        JsonArrayBuilder plnArrBld = Json.createArrayBuilder();
+	        plnArrBld.add("Rakesh");
+	        plnArrBld.add("John");
+	        JsonArray arr = plnArrBld.build();
+	        // the array got created, add it to the json as a child element
+	        jsonBuilder.add("direct_contacts", arr);
+	         
+	        // create an array of key-value pairs
+	        JsonArrayBuilder kvArrBld = Json.createArrayBuilder();
+	        // create each key-value pair as seperate object and add it to the array
+	        kvArrBld.add(Json.createObjectBuilder().add("email", "java2novice@gmail.com").build());
+	        kvArrBld.add(Json.createObjectBuilder().add("mobile", "123123123123").build());
+	         
+	        JsonArray contactsArr = kvArrBld.build();
+	        // add contacts array object
+	        jsonBuilder.add("contacts", contactsArr);
+	         
+	        JsonObject empObj = jsonBuilder.build();
+	        // here we are writing to String writer. 
+	        // if you want you can write it to a file as well
+	        StringWriter strWtr = new StringWriter();
+	        JsonWriter jsonWtr = Json.createWriter(strWtr);
+	        jsonWtr.writeObject(empObj);
+	        jsonWtr.close();
+	         
+	        System.out.println(strWtr.toString());
+	}
+
+}
+
+{"emp_name":"Nataraj G","emp_id":1016,"salary":20000,"direct_contacts":["Rakesh","John"],"contacts":[{"email":"java2novice@gmail.com"},{"mobile":"123123123123"}]}
+

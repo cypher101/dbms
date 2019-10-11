@@ -1,0 +1,90 @@
+Experiment No. : B3
+Title : Aggregate functions
+> db.tea.insert({no:1,name:"Mayur"});
+WriteResult({ "nInserted" : 1 })
+> db.tea.insert({no:2,name:"Ashitosh"});
+WriteResult({ "nInserted" : 1 })
+> db.tea.insert({no:3,name:"Mangesh"});
+WriteResult({ "nInserted" : 1 })
+> db.tea.insert({no:4,name:"om"});
+WriteResult({ "nInserted" : 1 })
+$project
+> db.tea.aggregate({$project:{name:1}});			//1 = display
+{ "_id" : ObjectId("5d81b539030a8d40ad8f789e"), "name" : "Mayur" }
+{ "_id" : ObjectId("5d81b543030a8d40ad8f789f"), "name" : "Ashitosh" }
+{ "_id" : ObjectId("5d81b54e030a8d40ad8f78a0"), "name" : "Mangesh" }
+{ "_id" : ObjectId("5d81b555030a8d40ad8f78a1"), "name" : "om" }
+> db.tea.find();
+{ "_id" : ObjectId("5d81b539030a8d40ad8f789e"), "no" : 1, "name" : "Mayur" }
+{ "_id" : ObjectId("5d81b543030a8d40ad8f789f"), "no" : 2, "name" : "Ashitosh" }
+{ "_id" : ObjectId("5d81b54e030a8d40ad8f78a0"), "no" : 3, "name" : "Mangesh" }
+{ "_id" : ObjectId("5d81b555030a8d40ad8f78a1"), "no" : 4, "name" : "om" }
+> db.tea.aggregate({$project:{_id:0}});				//0 = don’t display
+{ "no" : 1, "name" : "Mayur" }
+{ "no" : 2, "name" : "Ashitosh" }
+{ "no" : 3, "name" : "Mangesh" }
+{ "no" : 4, "name" : "om" }
+$sort
+> db.tea.aggregate({$sort:{name:1}});				//ascending = 1
+{ "_id" : ObjectId("5d81b555030a8d40ad8f78a1"), "no" : 4, "name" : "om" }
+{ "_id" : ObjectId("5d81b54e030a8d40ad8f78a0"), "no" : 3, "name" : "Mangesh" }
+{ "_id" : ObjectId("5d81b543030a8d40ad8f789f"), "no" : 2, "name" : "Ashitosh" }
+{ "_id" : ObjectId("5d81b539030a8d40ad8f789e"), "no" : 1, "name" : "Mayur" }
+> db.tea.aggregate({$sort:{name:-1}});				//descending =-1
+{ "_id" : ObjectId("5d81b539030a8d40ad8f789e"), "no" : 1, "name" : "Mayur" }
+{ "_id" : ObjectId("5d81b543030a8d40ad8f789f"), "no" : 2, "name" : "Ashitosh" }
+{ "_id" : ObjectId("5d81b54e030a8d40ad8f78a0"), "no" : 3, "name" : "Mangesh" }
+{ "_id" : ObjectId("5d81b555030a8d40ad8f78a1"), "no" : 4, "name" : "om" }
+$limit:
+> db.tea.aggregate({$limit:2});
+{ "_id" : ObjectId("5d81b539030a8d40ad8f789e"), "no" : 1, "name" : "Mayur" }
+{ "_id" : ObjectId("5d81b543030a8d40ad8f789f"), "no" : 2, "name" : "Ashitosh" }
+$skip:
+> db.tea.aggregate({$skip:2});
+{ "_id" : ObjectId("5d81b54e030a8d40ad8f78a0"), "no" : 3, "name" : "Mangesh" }
+{ "_id" : ObjectId("5d81b555030a8d40ad8f78a1"), "no" : 4, "name" : "om" }
+$count:
+> db.te.aggregate({$group:{"_id":"$dept","count":{$sum:1}}});
+{ "_id" : "comp", "count" : 2 }
+{ "_id" : "mcch", "count" : 1 }
+{ "_id" : "IT", "count" : 1 }
+$max:
+> db.te.aggregate({$group:{"_id":"$dept","max":{$sum:1}}});
+{ "_id" : "mcch", "max" : 1 }
+{ "_id" : "IT", "max" : 1 }
+{ "_id" : "comp", "max" : 2 }
+$update:
+> db.te.updateMany({no:1},{$set:{per:78}});
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+> db.te.updateMany({no:2},{$set:{per:80}});
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+> db.te.updateMany({no:3},{$set:{per:70}});
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+> db.te.updateMany({no:4},{$set:{per:68}});
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+$max of per:
+> db.te.aggregate({$group:{"_id":"$dept","max":{$max:"$per"}}});
+{ "_id" : "mcch", "max" : 68 }
+{ "_id" : "IT", "max" : 70 }
+{ "_id" : "comp", "max" : 80 }
+$min of per:
+> db.te.aggregate({$group:{"_id":"$dept","min":{$min:"$per"}}});
+{ "_id" : "mcch", "min" : 68 }
+{ "_id" : "IT", "min" : 70 }
+{ "_id" : "comp", "min" : 78 }
+$max of avg:
+> db.te.aggregate({$group:{"_id":"$dept","avg":{$avg:"$per"}}});
+{ "_id" : "comp", "avg" : 79 }
+{ "_id" : "mcch", "avg" : 68 }
+{ "_id" : "IT", "avg" : 70 }
+$pipelining output of 2 aggregate functions (sort & skip) :
+> db.te.aggregate({$sort:{per:1}},{$skip:2});
+{ "_id" : ObjectId("5d81b7cc030a8d40ad8f78a2"), "no" : 1, "name" : "Mayur", "dept" : "comp", "per" : 78 }
+{ "_id" : ObjectId("5d81b7d5030a8d40ad8f78a3"), "no" : 2, "name" : "Ashitosh", "dept" : "comp", "per" : 80 }
+$pipelining output of 2 aggregate functions (sort & limit) :
+> db.te.aggregate({$sort:{per:1}},{$limit:4});
+{ "_id" : ObjectId("5d81b7f6030a8d40ad8f78a5"), "no" : 4, "name" : "om", "dept" : "mcch", "per" : 68 }
+{ "_id" : ObjectId("5d81b7e5030a8d40ad8f78a4"), "no" : 3, "name" : "Mangesh", "dept" : "IT", "per" : 70 }
+{ "_id" : ObjectId("5d81b7cc030a8d40ad8f78a2"), "no" : 1, "name" : "Mayur", "dept" : "comp", "per" : 78 }
+{ "_id" : ObjectId("5d81b7d5030a8d40ad8f78a3"), "no" : 2, "name" : "Ashitosh", "dept" : "comp", "per" : 80 }
+
